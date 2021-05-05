@@ -87,8 +87,7 @@ uint32_t foe_write_flash(foe_writefile_cfg_t *writefile_cfg, uint8_t *data,
     bool ret = MAP_FlashCtl_A_programMemory((void*)data, (void*)ui32FlashAddr, bytestowrite);
 #endif
 #if defined(__MCU_HAS_FLCTL__)
-    bool ret = MAP_FlashCtl_programMemory((void*) data, (void*) ui32FlashAddr,
-                                          bytestowrite);
+    bool ret = MAP_FlashCtl_programMemory((void*) data, (void*) ui32FlashAddr, bytestowrite);
 #endif
     // 0 on success
     return (!ret);

@@ -76,20 +76,31 @@ static uint8_t test_jump2app(void) {
 	uint8_t ret = 0;
 	uint8_t sw1 = 1;
 	uint8_t ecat_boot = 0;
-#ifdef LAUNCHPAD
+	uint8_t user_ram = 0;
+#if HW_TYPE == LP
 	// poll switch ... 0 pressed
-	sw1 = MAP_GPIO_getInputPinValue(GPIO_PORT_P1, GPIO_PIN1);
+	// sw1 == 1 ==> pressed
+	sw1 = (~MAP_GPIO_getInputPinValue(PORT_SWITCH, SW1_PIN)) & 0x1;
 #endif
 #ifdef HAVE_BOOT_PIN
 	ecat_boot = MAP_GPIO_getInputPinValue(PORT_ECAT_BOOT, PIN_ECAT_BOOT);
 #else
-	ecat_boot = (read_user_RAM() == 0xB007B007);
+	user_ram = (read_user_RAM() == 0xB007B007);
 #endif
-	ret = sw1 && (!ecat_boot) && crc_ok;
-	DPRINT("%s : %d = %d !%d %d\n", __FUNCTION__, ret, sw1, ecat_boot, crc_ok);
+    ret = (!(sw1 || ecat_boot || user_ram)) && crc_ok;
+    DPRINT("%s : %d = (not( %d || %d || %d )) && %d\n",
+           __FUNCTION__, ret, sw1, ecat_boot, user_ram, crc_ok);
 
 	return ret;
 }
+
+void try_boot(void)
+{
+    if ( test_jump2app() ) {
+        jump2app();
+    }
+}
+
 
 static void clock_src(void) {
 
@@ -136,7 +147,7 @@ static void do_morse_led(void) {
 		init_morser(&m, morser_string);
 	}
 	/////////////////////////////////////////////////////////////////
-#ifdef LAUNCHPAD
+#if HW_TYPE == LP
     if ( led_status ) {
     	MAP_GPIO_setOutputHighOnPin(PORT_LED_RED, PIN_LED_R);
     } else {
@@ -154,7 +165,6 @@ static void do_morse_led(void) {
 void main(uint32_t bslParams) {
 	int i = 0;
 	volatile uint32_t loop_cnt;
-	volatile uint8_t test_jump = 0;
 
 	// Halting the Watchdog and disable IRQs
 	MAP_WDT_A_holdTimer();
@@ -199,19 +209,14 @@ void main(uint32_t bslParams) {
 
 	gCalc_crc = calc_CRC(FLASH_APP_START, FLASH_APP_SIZE);
 	crc_ok = (gCalc_crc == CRC_App) ? 1 : 0;
-	DPRINT("bldr ver %s HW ver 0x%02X\n", BLDR_Version, HW_VER);
+	DPRINT("bldr ver %s HW type 0x%02X\n", BLDR_Version, HW_TYPE);
 	DPRINT("CRC : calc 0x%04X flash 0x%04X\n", gCalc_crc, CRC_App);
 
 	/*
 	 * ecat init before test jumps
 	 */
 	soes_init(&config);
-
-	test_jump = test_jump2app();
-	if (test_jump) {
-		DPRINT(">>>\n");
-		jump2app();
-	}
+	try_boot();
 
 	while (1) {
 		soes_loop();

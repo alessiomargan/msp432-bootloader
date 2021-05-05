@@ -123,21 +123,17 @@ void Configure_EcatPDI(void) {
  *
  */
 void Configure_GPIO(void) {
-#ifdef LAUNCHPAD
-	/*
-	 * Led
-	 */
+#if HW_TYPE == LP
+	// Led
 	// Set P1.0 to output direction
-    MAP_GPIO_setAsOutputPin(PORT_LED_RED, GPIO_PIN0);
-    MAP_GPIO_setOutputLowOnPin(PORT_LED_RED, GPIO_PIN0);
+    MAP_GPIO_setAsOutputPin(PORT_LED_RED, PIN_LED_R);
+    MAP_GPIO_setOutputLowOnPin(PORT_LED_RED, PIN_LED_R);
     // Set P2.[0,1,2] to output direction
-    MAP_GPIO_setAsOutputPin(PORT_LED_RED, LED_PINS);
-    MAP_GPIO_setOutputLowOnPin(PORT_LED_RED, LED_PINS);
-    /*
-     * Buttons switch
-     */
+    MAP_GPIO_setAsOutputPin(PORT_LED_RBG, LED_PINS);
+    MAP_GPIO_setOutputLowOnPin(PORT_LED_RBG, LED_PINS);
+    // Buttons switch
     // Configuring P1.[1,4] as an input and enabling interrupts
-    MAP_GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P1, GPIO_PIN1|GPIO_PIN4);
+    MAP_GPIO_setAsInputPinWithPullUpResistor(PORT_SWITCH, SW1_PIN|SW2_PIN);
     //MAP_GPIO_interruptEdgeSelect(GPIO_PORT_P1, GPIO_PIN1|GPIO_PIN4, GPIO_LOW_TO_HIGH_TRANSITION);
     //MAP_GPIO_clearInterruptFlag(GPIO_PORT_P1, GPIO_PIN1|GPIO_PIN4);
     //MAP_GPIO_enableInterrupt(GPIO_PORT_P1, GPIO_PIN1|GPIO_PIN4);

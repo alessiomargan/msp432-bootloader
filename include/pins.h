@@ -1,7 +1,10 @@
 
-#if HW_VER == 0xA
+#define LP      0x0A    // launchpad
+#define FT      0x0B    // ft6_msp432
+#define AN      0x0C    // ain_msp432
 
-#define LAUNCHPAD
+
+#if HW_TYPE == LP
 
 //*****************************************************************************
 //  LEDs
@@ -15,7 +18,9 @@
 //
 //  Switch
 //  P1.[1,4]
-//
+#define PORT_SWITCH     GPIO_PORT_P1
+#define SW1_PIN         GPIO_PIN1
+#define SW2_PIN         GPIO_PIN4
 //  UART
 //  P1.[2,3]
 #define EUSCI_UART		EUSCI_A0_BASE
@@ -44,7 +49,7 @@
 
 
 //*****************************************************************************
-#elif HW_VER == 0xB
+#elif HW_TYPE == FT
 
 //  LEDs
 //  P7.6 R
@@ -89,7 +94,7 @@
 
 #define INT_ECAT        INT_PORT6
 
-#elif HW_VER == 0xC
+#elif HW_TYPE == AN
 
 //  LEDs
 //  P7.6 R
@@ -136,7 +141,7 @@
 
 #else
 
-#error "HW_VER NOT Defined"
+    #error "Unknown HW_TYPE"
 
 #endif
 
