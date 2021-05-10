@@ -40,34 +40,22 @@
 
 MEMORY
 {
-//    MAIN       (RX) : origin = 0x00000000, length = 0x0003C000
-//    BSL_TEXT   (RX) : origin = 0x0003C000, length = 0x00004000
-//    MBX_BOOT   (R)  : origin = 0x00200000, length = 0x00001000
-//    BSL_START  (RX) : origin = 0x00202000, length = 0x00000010
-    // BLS432_VERSION_...
-//    NOT_USED   (RX) : origin = 0x00202020, length = 0x00000060
-//    BSL_INTVEC (RX) : origin = 0x00202080, length = 0x00000020
-//    BSL_FLASH  (RX) : origin = 0x002020A0, length = 0x00001F60
+    // Info memory 16 Kb
+    INFO        (RX) : origin = 0x00200000, length = 0x00004000
+    // Main memory 256 Kb :
+    // bank_0
+    MAIN_BL     (RX) : origin = 0x00000000, length = 0x00010000
+    BLDR_VERSION (R) : origin = 0x0010000,  length = 0x00000008   // BANK_0 SECTOR_16
+    CRC_APP      (R) : origin = 0x0011000,  length = 0x00000004   // BANK_0 SECTOR_17
+    // bank_1
+    MAIN_APP    (RX) : origin = 0x00020000, length = 0x00010000
+    //PAR_APP      (R): origin = 0x0039000, length = 0x00001000   // BANK_1 SECTOR_31
 
-//    SRAM_CODE  (RWX): origin = 0x01000000, length = 0x00010000
-//    SRAM_DATA  (RW) : origin = 0x20000000, length = 0x00002000
-
-//    BSL432_VERSION_VENDOR (R): origin = 0x00202010, length = 0x00000002
-//    BSL432_VERSION_CI     (R): origin = 0x00202012, length = 0x00000002
-//    BSL432_VERSION_API    (R): origin = 0x00202014, length = 0x00000002
-//    BSL432_VERSION_PI     (R): origin = 0x00202016, length = 0x00000002
-//    BSL432_VERSION_ID     (R): origin = 0x00202018, length = 0x00000002
-
-    BLDR_VERSION (R): origin = 0x0010000, length = 0x00000008   // BANK_0 SECTOR_16
-    CRC_APP      (R): origin = 0x0011000, length = 0x00000004   // BANK_0 SECTOR_17
-    //PAR_APP      (R): origin = 0x0039000, length = 0x00001000 // BANK_1 SECTOR_31
-
-    MAIN_BL    (RX) : origin = 0x00000000, length = 0x00010000
-    MAIN_APP   (RX) : origin = 0x00020000, length = 0x00010000
-    INFO       (RX) : origin = 0x00200000, length = 0x00004000
-
-    SRAM_CODE  (RWX): origin = 0x01000000, length = 0x00010000
-    SRAM_DATA  (RW) : origin = 0x20000000, length = 0x00010000
+    ALIAS
+    {
+        SRAM_CODE  (RWX): origin = 0x01000000
+        SRAM_DATA  (RW) : origin = 0x20000000
+    } length = 0x00010000
 }
 
 /* The following command line options are set as part of the CCS project.    */
