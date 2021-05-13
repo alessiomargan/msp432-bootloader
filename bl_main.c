@@ -74,7 +74,7 @@ static uint32_t read_user_RAM(void) {
 static uint8_t test_jump2app(void) {
 
 	uint8_t ret = 0;
-	uint8_t sw1 = 1;
+	uint8_t sw1 = 0;
 	uint8_t ecat_boot = 0;
 	uint8_t user_ram = 0;
 #if HW_TYPE == LP
