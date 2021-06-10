@@ -86,7 +86,7 @@ SECTIONS
     .CRC_APP : > CRC_APP
     .BLDR_VERSION : > BLDR_VERSION
 
-    .vtable :   > SRAM_DATA
+    .vtable :   > 0x20000000
     .data   :   > SRAM_DATA
     .bss    :   > SRAM_DATA
     .sysmem :   > SRAM_DATA

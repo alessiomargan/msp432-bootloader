@@ -162,35 +162,56 @@ static void do_morse_led(void) {
 #endif
 }
 
+static void CustomSystemInit(void) {
+
+    // Halting the Watchdog and disable IRQs
+    MAP_WDT_A_holdTimer();
+    MAP_Interrupt_disableMaster();
+
+    // Set the core voltage level to VCORE1
+    MAP_PCM_setCoreVoltageLevel(PCM_VCORE1);
+    // Before we set the DCO, transition the device to use DCDC converter
+    MAP_PCM_setPowerState(PCM_AM_DCDC_VCORE1);
+
+    // At 48MHz in VCORE0, MSP432P401R needs 1 wait states
+#if defined(__MCU_HAS_FLCTL_A__)
+    MAP_FlashCtl_A_setWaitState(FLASH_A_BANK0, 1);
+    MAP_FlashCtl_A_setWaitState(FLASH_A_BANK1, 1);
+#endif
+#if defined(__MCU_HAS_FLCTL__)
+    MAP_FlashCtl_setWaitState(FLASH_BANK0, 1);
+    MAP_FlashCtl_setWaitState(FLASH_BANK1, 1);
+#endif
+
+    // Enabling the FPU with stacking enabled (for use within ISR)
+    MAP_FPU_enableModule();
+    MAP_FPU_enableLazyStacking();
+
+    // Set DCO to 48MHz
+    MAP_CS_setDCOFrequency(CS_48MHZ);
+
+}
+
 void main(uint32_t bslParams) {
 	int i = 0;
 	volatile uint32_t loop_cnt;
 
-	// Halting the Watchdog and disable IRQs
-	MAP_WDT_A_holdTimer();
-	MAP_Interrupt_disableMaster();
-
-	// Set the core voltage level to VCORE1
-	MAP_PCM_setCoreVoltageLevel(PCM_VCORE1);
-	// Before we set the DCO, transition the device to use DCDC converter
-	MAP_PCM_setPowerState(PCM_AM_DCDC_VCORE1);
-
-	// At 48MHz in VCORE0, MSP432P401R needs 1 wait states
-#if defined(__MCU_HAS_FLCTL_A__)
-	MAP_FlashCtl_A_setWaitState(FLASH_A_BANK0, 1);
-	MAP_FlashCtl_A_setWaitState(FLASH_A_BANK1, 1);
-#endif
-#if defined(__MCU_HAS_FLCTL__)
-	MAP_FlashCtl_setWaitState(FLASH_BANK0, 1);
-	MAP_FlashCtl_setWaitState(FLASH_BANK1, 1);
-#endif
-
-	// Enabling the FPU with stacking enabled (for use within ISR)
-	MAP_FPU_enableModule();
-	MAP_FPU_enableLazyStacking();
-
-	// Set DCO to 48MHz
-	MAP_CS_setDCOFrequency(CS_48MHZ);
+	/*
+	 * move here to debug SystemInit() resetting the cpu when __SYSTEM_CLOCK = 48 Mhz
+	 * executing CS->CTL1 &= ~(CS_CTL1_SELM_MASK | CS_CTL1_DIVM_MASK) | CS_CTL1_SELM__DCOCLK;
+	 *
+	 * Setup the microcontroller system.
+     * Performs the following initialization steps:
+     *     1. Enables the FPU
+     *     2. Halts the WDT if requested
+     *     3. Enables all SRAM banks
+     *     4. Sets up power regulator and VCORE
+     *     5. Enable Flash wait states if needed
+     *     6. Change MCLK to desired frequency
+     *     7. Enable Flash read buffering
+     */
+	//SystemInit();
+	CustomSystemInit();
 
 	/* Initializes Clock System */
 	//MAP_CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_48);
