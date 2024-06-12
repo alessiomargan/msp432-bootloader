@@ -1,14 +1,14 @@
 #include "foe_flash.h"
 #include <soes/esc_foe.h>
 
-extern uint32_t foe_write_flash(foe_writefile_cfg_t *writefile_cfg,
+extern uint32_t foe_write_flash(foe_file_cfg_t *writefile_cfg,
                                 uint8_t *data, size_t length);
-extern uint32_t foe_read_flash(foe_writefile_cfg_t *writefile_cfg,
+extern uint32_t foe_read_flash(foe_file_cfg_t *writefile_cfg,
                                uint8_t *data, size_t length);
 extern uint32_t on_foe_open_cb(uint8_t op);
 extern uint32_t on_foe_close_cb(void);
 
-foe_writefile_cfg_t gFOE_firmware_files[] = {
+foe_file_cfg_t gFOE_firmware_files[] = {
 ///////////////////////////////////////////////////////////////////////////
 //
 ///////////////////////////////////////////////////////////////////////////

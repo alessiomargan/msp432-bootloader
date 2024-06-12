@@ -30,13 +30,13 @@ uint8_t *rxpdo = (uint8_t*) &rx_pdo;
 uint8_t *txpdo = (uint8_t*) &tx_pdo;
 
 extern uint16_t crc_ok;
-extern foe_writefile_cfg_t gFOE_firmware_files[];
+extern foe_file_cfg_t gFOE_firmware_files[];
 
 extern void jump2app(void);
 
 void pre_state_change_hook(uint8_t *as, uint8_t *an);
 void post_state_change_hook(uint8_t *as, uint8_t *an);
-void ESC_App_objecthandler(uint16_t index, uint8_t subindex, uint16_t flags);
+uint32_t ESC_App_objecthandler(uint16_t index, uint8_t subindex, uint16_t flags);
 
 /* Setup config hooks */
 const esc_cfg_t config = {
@@ -64,7 +64,7 @@ const esc_cfg_t config = {
  * @param[in] index      = index of SDO download request to handle
  * @param[in] sub-index  = sub-index of SDO download request to handle
  */
-void ESC_App_objecthandler(uint16_t index, uint8_t subindex, uint16_t flags) {
+uint32_t ESC_App_objecthandler(uint16_t index, uint8_t subindex, uint16_t flags) {
 	switch (index) {
 	case 0x8001:
 		/* Handle post-write of parameter values */
@@ -78,6 +78,7 @@ void ESC_App_objecthandler(uint16_t index, uint8_t subindex, uint16_t flags) {
 		DPRINT("SDO 0x%04X %d NOT Handled\n", index, subindex);
 		break;
 	}
+	return 0;
 }
 
 /** Mandatory: Hook called from the slave stack ESC_stopoutputs to act on state changes
@@ -117,7 +118,7 @@ void bootstrap_foe_init(void) {
 
 	/* setup application foe_file structs */
 	int file_cnt = 0;
-	foe_writefile_cfg_t *tmp_foe_files = gFOE_firmware_files;
+	foe_file_cfg_t *tmp_foe_files = gFOE_firmware_files;
 
 	while (tmp_foe_files->name != 0) {
 		DPRINT("foe_file %s addr 0x%04X\n", tmp_foe_files->name,
@@ -135,7 +136,7 @@ void bootstrap_foe_init(void) {
 	/** Pointer to files configured to be used by FoE */
 	gFOE_config.files = gFOE_firmware_files;
 
-	FOE_config(&gFOE_config, gFOE_firmware_files);
+	FOE_config(&gFOE_config);
 
 	DPRINT("config %d foe_file(s)\n", file_cnt);
 
