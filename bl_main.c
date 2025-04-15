@@ -38,6 +38,8 @@
 #include <peripherals.h>
 #include <foe_flash.h>
 
+#include <build_info.h>
+
 #include <tiva-morser/morse.h>
 
 extern uint32_t gCalc_crc;
