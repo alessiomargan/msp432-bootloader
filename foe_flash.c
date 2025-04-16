@@ -48,17 +48,10 @@
 #endif
 
 extern foe_cfg_t gFOE_config;
-
-#pragma RETAIN(BLDR_Version)
-#pragma DATA_SECTION(BLDR_Version, ".BLDR_VERSION")
-const uint8_t BLDR_Version[8] = "msp_1.2";
-
-#pragma RETAIN(CRC_App)
-#pragma DATA_SECTION(CRC_App, ".CRC_APP")
-const uint32_t CRC_App;
-
-uint32_t gCalc_crc;
-uint16_t crc_ok;
+extern const uint8_t BLDR_Version[];
+extern const uint32_t CRC_App;
+extern uint32_t gCalc_crc;
+extern uint16_t crc_ok;
 
 uint32_t calc_CRC(uint32_t addr, uint32_t length)
 {

@@ -45,6 +45,7 @@
 extern uint32_t gCalc_crc;
 extern uint16_t crc_ok;
 extern esc_cfg_t config;
+extern void print_build_info(void);
 
 void jump2app(void) {
 
@@ -194,6 +195,7 @@ static void CustomSystemInit(void) {
 
 }
 
+
 void main(uint32_t bslParams) {
 	int i = 0;
 	volatile uint32_t loop_cnt;
@@ -226,9 +228,11 @@ void main(uint32_t bslParams) {
 	 * Config periphs
 	 */
 	Configure_UART();
-	clock_src();
+	//clock_src();
 	Configure_GPIO();
 	Configure_EcatPDI();
+
+	print_build_info();
 
 	gCalc_crc = calc_CRC(FLASH_APP_START, FLASH_APP_SIZE);
 	crc_ok = (gCalc_crc == CRC_App) ? 1 : 0;

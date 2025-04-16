@@ -66,7 +66,8 @@ void Configure_UART(void) {
 	/* Enable UART module */
 	MAP_UART_enableModule(EUSCI_UART);
 
-	DPRINT("\n\n%s\n", __FUNCTION__);
+	printf("\n\n");
+	DPRINT("%s\n", __FUNCTION__);
 }
 
 int fputc(int _c, register FILE *_fp) {
