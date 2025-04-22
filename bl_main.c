@@ -253,9 +253,9 @@ void main(uint32_t bslParams) {
 		}
 
 		// Delay .. 48 Mhz clock --> 1ms
-		for (i = 2000; i > 0; i--)
-			;
-
+		for (i = 2000; i > 0; i--) {
+			asm (" nop");
+		}
 	}
 
 }

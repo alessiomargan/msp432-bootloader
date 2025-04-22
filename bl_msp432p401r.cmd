@@ -45,7 +45,7 @@ MEMORY
     // Main memory 256 Kb :
     // bank_0
     MAIN_BL     (RX) : origin = 0x00000000, length = 0x00010000
-    BLDR_VERSION (R) : origin = 0x0010000,  length = 0x00000008   // BANK_0 SECTOR_16
+    BLDR_VERSION (R) : origin = 0x0010000,  length = 0x00000040   // BANK_0 SECTOR_16
     CRC_APP      (R) : origin = 0x0011000,  length = 0x00000004   // BANK_0 SECTOR_17
     // bank_1
     MAIN_APP    (RX) : origin = 0x00020000, length = 0x00010000
